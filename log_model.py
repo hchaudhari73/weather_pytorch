@@ -18,7 +18,7 @@ if __name__ == "__main__":
     X, y = get_X_y(df)
 
     # converting cat to int
-    X_num = pd.get_dummies(X)    
+    X_num = pd.get_dummies(X, drop_first=True)    
     
     # Over Sampling
     ros = RandomOverSampler(sampling_strategy=0.5)
@@ -33,10 +33,18 @@ if __name__ == "__main__":
     y_pred = model.predict(X_test)
 
     # classification report
-    print(classification_report(y_test, y_pred))
+    class_report = classification_report(y_test, y_pred)
+    print(class_report)
+
+    # saving result
+    with open(f"{BASE_DIR}/log_result.txt", "w") as results:
+        results.write("Classification repost using Logistic Regression \n")
+        for r in class_report:
+            results.write(r)
 
     # saving model
     with open(f"{MODEL_DIR}/log_model.pkl", "wb") as pickle_out:
         pickle.dump(model, pickle_out)
     print("Model Saved")
 
+    
